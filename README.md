@@ -1,6 +1,6 @@
-# Run and deploy your AI Studio app
+# Local LLM Vibe Coding Microapp
 
-This contains everything you need to run your app locally.
+Massive WIP, for now just loads .json and puts them into blocks that can be modified
 
 ## Run Locally
 
