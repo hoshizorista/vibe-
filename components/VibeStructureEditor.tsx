@@ -65,83 +65,87 @@ const VibeStructureEditor: React.FC<VibeStructureEditorProps> = ({ data, onDataC
     handleSectionChange('Header', { ...data.Header, [key]: value });
   };
   
+  const renderBlock = (sectionKey: VibeSectionKey) => {
+    const isCollapsible = true; // All top-level sections are collapsible
+    const isCollapsed = collapsedSections[sectionKey];
+    const onToggleCollapse = () => toggleSectionCollapse(sectionKey);
+
+    const commonProps = {
+      key: sectionKey,
+      isCollapsible,
+      isCollapsed,
+      onToggleCollapse,
+    } as const;
+
+    if (sectionKey === 'Header') {
+      return (
+        <HeaderEditor
+          {...commonProps}
+          data={data.Header}
+          onChange={handleHeaderChange}
+        />
+      );
+    }
+
+    if (
+      [
+        'Imports',
+        'Settings',
+        'Conditions',
+        'Loops',
+        'Errors',
+        'Flow',
+        'Comments',
+      ].includes(sectionKey)
+    ) {
+      return (
+        <StringListEditor
+          {...commonProps}
+          title={sectionKey}
+          items={data[sectionKey] as string[]}
+          onChange={(newItems) => handleSectionChange(sectionKey, newItems)}
+          placeholder={`Enter ${sectionKey.slice(0, -1).toLowerCase()}`}
+        />
+      );
+    }
+
+    if (sectionKey === 'Variables') {
+      return (
+        <VariablesEditor
+          {...commonProps}
+          items={data.Variables}
+          onChange={(newItems) => handleSectionChange('Variables', newItems as VariableData[])}
+        />
+      );
+    }
+
+    if (sectionKey === 'Classes') {
+      return (
+        <ClassesEditor
+          {...commonProps}
+          items={data.Classes}
+          onChange={(newItems) => handleSectionChange('Classes', newItems as ClassData[])}
+        />
+      );
+    }
+
+    if (sectionKey === 'Functions') {
+      return (
+        <FunctionsEditor
+          {...commonProps}
+          items={data.Functions}
+          onChange={(newItems) => handleSectionChange('Functions', newItems as FunctionData[])}
+        />
+      );
+    }
+
+    return null;
+  };
+
   return (
     // Removed space-y-0. SectionCard's own margin-bottom will handle spacing.
-    <div className=""> 
-      {sectionOrderRef.current.map(key => {
-        const sectionKey = key as VibeSectionKey;
-        const isCollapsible = true; // All top-level sections are collapsible
-        const isCollapsed = collapsedSections[sectionKey];
-        const onToggleCollapse = () => toggleSectionCollapse(sectionKey);
-
-        switch (sectionKey) {
-          case 'Header':
-            return (
-              <HeaderEditor 
-                key={sectionKey} 
-                data={data.Header} 
-                onChange={handleHeaderChange}
-                isCollapsible={isCollapsible}
-                isCollapsed={isCollapsed}
-                onToggleCollapse={onToggleCollapse}
-              />
-            );
-          case 'Imports':
-          case 'Settings':
-          case 'Conditions':
-          case 'Loops':
-          case 'Errors':
-          case 'Flow':
-          case 'Comments':
-            return (
-              <StringListEditor
-                key={sectionKey}
-                title={sectionKey}
-                items={data[sectionKey] as string[]}
-                onChange={(newItems) => handleSectionChange(sectionKey, newItems)}
-                placeholder={`Enter ${sectionKey.slice(0, -1).toLowerCase()}`}
-                isCollapsible={isCollapsible}
-                isCollapsed={isCollapsed}
-                onToggleCollapse={onToggleCollapse}
-              />
-            );
-          case 'Variables':
-            return (
-              <VariablesEditor
-                key={sectionKey}
-                items={data.Variables}
-                onChange={(newItems) => handleSectionChange('Variables', newItems as VariableData[])}
-                isCollapsible={isCollapsible}
-                isCollapsed={isCollapsed}
-                onToggleCollapse={onToggleCollapse}
-              />
-            );
-          case 'Classes':
-            return (
-              <ClassesEditor
-                key={sectionKey}
-                items={data.Classes}
-                onChange={(newItems) => handleSectionChange('Classes', newItems as ClassData[])}
-                isCollapsible={isCollapsible}
-                isCollapsed={isCollapsed}
-                onToggleCollapse={onToggleCollapse}
-              />
-            );
-          case 'Functions':
-            return (
-              <FunctionsEditor
-                key={sectionKey}
-                items={data.Functions}
-                onChange={(newItems) => handleSectionChange('Functions', newItems as FunctionData[])}
-                isCollapsible={isCollapsible}
-                isCollapsed={isCollapsed}
-                onToggleCollapse={onToggleCollapse}
-              />
-            );
-          default:
-            return null;
-        }
-      })}
+    <div className="">
+      {sectionOrderRef.current.map((key) => renderBlock(key as VibeSectionKey))}
     </div>
   );
 };
