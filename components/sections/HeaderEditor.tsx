@@ -1,6 +1,6 @@
 import React from 'react';
-import { HeaderData, OriginalLanguage, ComplexityLevel, TranslationConfidence } from '../../types';
-import { ORIGINAL_LANGUAGE_OPTIONS, COMPLEXITY_LEVEL_OPTIONS, TRANSLATION_CONFIDENCE_OPTIONS } from '../../constants';
+import { HeaderData, ComplexityLevel, TranslationConfidence } from '../../types';
+import { COMPLEXITY_LEVEL_OPTIONS, TRANSLATION_CONFIDENCE_OPTIONS } from '../../constants';
 import Input from '../common/Input';
 import TextArea from '../common/TextArea';
 import Select from '../common/Select';
@@ -22,11 +22,11 @@ const HeaderEditor: React.FC<HeaderEditorProps> = ({ data, onChange, isCollapsib
       isCollapsed={isCollapsed}
       onToggleCollapse={onToggleCollapse}
     >
-      <Select
+      <Input
         label="Original Language"
         value={data.Original_Language}
-        onChange={(e) => onChange('Original_Language', e.target.value as OriginalLanguage)}
-        options={ORIGINAL_LANGUAGE_OPTIONS.map(lang => ({ value: lang, label: lang }))}
+        onChange={(e) => onChange('Original_Language', e.target.value)}
+        placeholder="e.g., Python"
       />
       <TextArea
         label="Original Code Snippet"
