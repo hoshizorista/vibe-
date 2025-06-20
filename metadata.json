@@ -1,0 +1,6 @@
+{
+  "name": "Vibe++ JSON Editor",
+  "description": "A web application to edit Vibe++ JSON structures with a user-friendly interface. It allows users to load, parse, modify, and export Vibe++ data.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
